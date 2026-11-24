@@ -64,6 +64,42 @@
 #menuUserItems>button[data-menu="Logout"]{margin-top:10px;background:linear-gradient(100deg,#ff315b25,#ff315b0d);border-color:#ff315b45;color:#ff9bad}
 @media(hover:hover){.side-menu #menuUserItems>button:hover,.side-menu #menuGuestItems>button:hover,.side-menu #menuGuestExtra>button:hover{background:linear-gradient(110deg,#ff315b25,#21d6cf18);border-color:#ffffff30}}
 
+
+/* Force every account-menu option into its own full-width row */
+.side-menu #menuUserItems,
+.side-menu #menuGuestItems,
+.side-menu #menuGuestExtra{display:block;width:100%;min-width:0}
+.side-menu #menuUserItems>button,
+.side-menu #menuGuestItems>button,
+.side-menu #menuGuestExtra>button{
+ display:block!important;float:none!important;clear:both!important;
+ width:100%!important;min-width:0!important;max-width:none!important;
+ box-sizing:border-box!important;text-align:left!important;
+ margin:0 0 11px!important;padding:16px 18px!important;
+ min-height:54px;border:1px solid #ffffff18!important;
+ border-radius:16px!important;
+ background:linear-gradient(110deg,#292936 0%,#20202a 58%,#252532 100%)!important;
+ color:#f8f8fc!important;font-size:15px!important;font-weight:750!important;
+ line-height:1.35!important;white-space:normal!important;
+ box-shadow:0 6px 18px #0004,inset 0 1px 0 #ffffff0a!important;
+}
+.side-menu #menuUserItems>button[data-menu="Logout"]{
+ margin-top:16px!important;
+ background:linear-gradient(105deg,#612638,#34202b)!important;
+ border-color:#ff668455!important;color:#ffb0bf!important;
+}
+.side-menu #menuUserItems>button:active,
+.side-menu #menuGuestItems>button:active,
+.side-menu #menuGuestExtra>button:active{
+ transform:scale(.985);border-color:#ff6b91!important;
+}
+.side-menu .menu-section-label{
+ display:block;width:100%;box-sizing:border-box;
+ margin:21px 0 12px!important;padding:0 0 0 11px!important;
+ border-left:3px solid #ff315b;color:#b8b8c8;
+ font-size:10px;font-weight:850;letter-spacing:1.8px;
+}
+
 </style></head>
 <body><div class="app">
 <header class="top"><div class="brand-lockup" aria-label="TooTwoFun"><span class="brand-name">TooTwoFun</span></div><button class="menu-btn" id="menuOpen" aria-label="Open navigation menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><button class="auth-btn" id="authOpen" aria-label="Log in" style="display:none">Log in</button></header><div class="feed-tabs" aria-label="Video feed navigation"><button class="feed-tab" id="community">Community</button><button class="feed-tab" id="following">Following</button><button class="feed-tab active" id="forYou">For You</button><button class="search-icon" id="searchOpen" aria-label="Search TooTwoFun"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></button></div><div class="menu-backdrop" id="menuBackdrop"></div><aside class="side-menu" id="sideMenu"><div class="menu-title">TooTwoFun <button id="menuClose" aria-label="Close menu">×</button></div><div id="menuGuestItems"><div class="menu-section-label">ACCOUNT</div><button data-menu="Login">Log in</button><button data-menu="Signup">Sign up</button></div><div id="menuUserItems" style="display:none"><div class="menu-section-label">MY ACCOUNT</div><button data-menu="Wallet">▣ &nbsp; Wallet</button><button data-menu="Packages">◈ &nbsp; Packages</button><button data-menu="Contact">✉ &nbsp; Contact</button><button data-menu="Live Chat">◉ &nbsp; 24/7 Live Chat</button><button data-menu="Referral">♧ &nbsp; Referral / Invite Friends</button><button data-menu="Logout">↪ &nbsp; Log out</button><div class="menu-section-label">DISCOVER</div><button data-menu="About">About TooTwoFun</button><button data-menu="Help">Help &amp; Support</button><div class="menu-section-label">INFORMATION</div><button data-menu="Terms">Terms &amp; Conditions</button><button data-menu="Privacy">Privacy Policy</button></div><div id="menuGuestExtra"><div class="menu-section-label">DISCOVER</div><button data-menu="Referral">Invite friends · Referral</button><button data-menu="About">About TooTwoFun</button><button data-menu="Live Chat">24/7 Live Chat</button><button data-menu="Help">Help &amp; Support</button><div class="menu-section-label">INFORMATION</div><button data-menu="Terms">Terms &amp; Conditions</button><button data-menu="Privacy">Privacy Policy</button></div></aside>
