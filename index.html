@@ -52,7 +52,11 @@
 .app.profile-open .bottom .nav{color:#888}
 .app.profile-open .bottom .nav.active{color:#111}
 .app.profile-open .bottom .create{background:#080808;color:#fff}
-\n/* Auth-aware account menu */\n.side-menu #menuUserItems>button,.side-menu #menuGuestItems>button,.side-menu #menuGuestExtra>button{width:100%;text-align:left;border:0;border-radius:17px;padding:17px 20px;margin:0 0 10px;background:#24242c;color:#fff;font-size:17px;font-weight:700}\n.side-menu .menu-section-label{margin:25px 8px 12px;color:#aaa;font-size:12px;font-weight:800;letter-spacing:2px}\n
+
+/* Auth-aware account menu */
+.side-menu #menuUserItems>button,.side-menu #menuGuestItems>button,.side-menu #menuGuestExtra>button{width:100%;text-align:left;border:0;border-radius:17px;padding:17px 20px;margin:0 0 10px;background:#24242c;color:#fff;font-size:17px;font-weight:700}
+.side-menu .menu-section-label{margin:25px 8px 12px;color:#aaa;font-size:12px;font-weight:800;letter-spacing:2px}
+
 /* Polished modern account drawer; keep the feed header and bottom navigation unchanged */
 .menu-backdrop{background:rgba(3,5,14,.68);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
 .side-menu{width:min(84%,340px);padding:calc(env(safe-area-inset-top) + 22px) 18px calc(24px + env(safe-area-inset-bottom));gap:5px;background:linear-gradient(160deg,#20202b 0%,#111119 58%,#171721 100%);border-left:1px solid #ffffff20;box-shadow:-18px 0 55px #000a}
@@ -112,7 +116,7 @@
 <div class="profile-top"><button id="profileBack" aria-label="Back to home">‹</button><strong style="font-size:18px">Profile</strong><button id="profileEditToggle" aria-label="Edit profile">⋯</button></div>
 <div class="profile-hero"><div class="profile-avatar-wrap"><img id="profilePageAvatar" alt="Profile photo" src="" style="display:none"><div id="profilePageInitial">T</div><button class="avatar-add" id="profileAvatarAdd" aria-label="Add profile photo">+</button></div><h2 id="profilePageName">Your name</h2><div id="profilePageUsername">@username</div></div>
 <div class="profile-actions"><button id="profileEditQuick">Edit profile</button><button id="profileShare">Share profile</button><button class="share-profile" id="profileQr" aria-label="Profile QR code">▦</button></div>
-<div class="profile-stats"><button type="button"><strong id="profileFollowingCount">—</strong><span>Following</span></button><button type="button"><strong id="profileFollowerCount">—</strong><span>Followers</span></button><button type="button"><strong id="profileLikeCount">0</strong><span>Likes</span></button></div>
+<div class="profile-stats"><button type="button"><strong id="profileVideoCount">0</strong><span>Videos</span></button><button type="button"><strong id="profileFollowerCount">—</strong><span>Followers</span></button><button type="button"><strong id="profileLikeCount">0</strong><span>Likes</span></button></div>
 <div class="suggest-head"><span>Suggested accounts ⓘ</span><button id="hideSuggestions" style="border:0;background:none;color:#888">Hide</button></div>
 <div class="suggest-row" id="profileSuggestions"><div class="suggest-card"><img alt="Suggested account" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop"><strong>Creators</strong><small>People you may know</small><button type="button" class="suggest-follow">Follow</button></div><div class="suggest-card"><div style="width:92px;height:92px;border-radius:50%;margin:auto;background:#1877f2;color:#fff;display:grid;place-items:center;font-size:58px;font-weight:800">f</div><strong>Facebook friends</strong><small>Find your friends</small><button type="button" class="suggest-find">Find</button></div></div>
 <div class="profile-tabs"><button class="active" data-profile-tab="videos" aria-label="Videos">▥</button><button data-profile-tab="saved" aria-label="Saved">♧</button><button data-profile-tab="liked" aria-label="Liked">♡</button><button data-profile-tab="private" aria-label="Private">▢</button></div>
