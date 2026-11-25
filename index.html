@@ -207,6 +207,8 @@ function showCreatorScreen(screen){createChooser.style.display=screen==='create'
 function stopCamera(){if(recordTimer){clearInterval(recordTimer);recordTimer=null}if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null}cameraPreview.srcObject=null}
 function closeCreator(){stopCamera();creatorPanel.style.display='none'}
 function openVideoUpload(){if(!currentUser){openAuth();toast('ভিডিও তৈরি ও আপলোড করতে Login করুন।');return}creatorPanel.style.display='block';showCreatorScreen('create');document.getElementById('uploadStatus').textContent=''}
+// Expose the module-scoped creator opener to the bottom-navigation click handler in the classic script.
+window.openVideoUpload=openVideoUpload;
 document.getElementById('uploadClose').addEventListener('click',closeCreator);
 document.getElementById('cameraBack').addEventListener('click',()=>{stopCamera();showCreatorScreen('create')});
 document.getElementById('editorBack').addEventListener('click',()=>showCreatorScreen('create'));
