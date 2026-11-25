@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09090d"><title>TooTwoFun Admin</title>
+<style>
+:root{color-scheme:dark;--pink:#ff315b;--cyan:#21d6cf}*{box-sizing:border-box}body{margin:0;background:#09090f;color:#f7f7fb;font-family:Inter,system-ui,Arial,sans-serif}.wrap{max-width:1000px;margin:auto;padding:24px 16px 60px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{font-size:25px;font-weight:950;letter-spacing:-1px;background:linear-gradient(100deg,#fff,#ff6b91,#66eee4);background-clip:text;color:transparent}.tag{font-size:11px;color:#aeb0c2;letter-spacing:1.5px}.panel{max-width:440px;margin:9vh auto;background:#171720;border:1px solid #ffffff18;border-radius:22px;padding:24px;box-shadow:0 20px 70px #0008}.panel h1{margin:0 0 8px;font-size:24px}.muted{color:#a7a7b4;font-size:13px;line-height:1.55}.input,button{font:inherit}.input{display:block;width:100%;padding:14px;margin:10px 0;border-radius:11px;border:1px solid #383844;background:#0d0d14;color:#fff}.btn{border:0;border-radius:11px;padding:13px 16px;font-weight:800;cursor:pointer}.primary{width:100%;background:var(--pink);color:white}.google{width:100%;background:#fff;color:#202124;margin-top:10px}.secondary{background:#292936;color:#fff}.danger{background:#713044;color:#ffdce4}.success{background:#145b49;color:#d9fff4}.status{min-height:22px;margin-top:12px;color:#9ee9d7;font-size:13px;overflow-wrap:anywhere}.hidden{display:none!important}.stats{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.stat{background:#191923;border:1px solid #ffffff16;border-radius:13px;padding:13px 16px;color:#b9bac8;font-size:12px}.stat strong{display:block;font-size:23px;color:white}.video{display:grid;grid-template-columns:minmax(120px,220px) 1fr;gap:16px;background:#171720;border:1px solid #ffffff18;border-radius:17px;padding:14px;margin:13px 0}.video video{width:100%;max-height:300px;aspect-ratio:9/16;object-fit:cover;background:#000;border-radius:11px}.meta{font-size:12px;color:#aaa;overflow-wrap:anywhere;line-height:1.6}.actions{display:flex;gap:9px;margin-top:14px}.actions button{flex:1}.empty{padding:35px;text-align:center;color:#a9a9b5;background:#171720;border-radius:15px}@media(max-width:560px){.video{grid-template-columns:1fr}.video video{max-height:360px;width:auto;max-width:100%;margin:auto}.top{align-items:flex-start}.brand{font-size:22px}}
+</style>
+</head>
+<body><main class="wrap">
+<header class="top"><div><div class="brand">TooTwoFun</div><div class="tag">SEPARATE ADMIN CONSOLE</div></div><button id="logout" class="btn secondary hidden">Log out</button></header>
+<section id="login" class="panel"><h1>Admin Login</h1><p class="muted">এই প্যানেল শুধু অনুমোদিত Admin account-এর জন্য। প্রথমে নিজের Admin account দিয়ে Login করুন।</p><form id="loginForm"><input class="input" id="email" type="email" autocomplete="username" placeholder="Admin email" required><input class="input" id="password" type="password" autocomplete="current-password" placeholder="Password" required><button class="btn primary" type="submit">Login</button></form><button id="google" class="btn google">Continue with Google</button><div id="loginStatus" class="status" role="status"></div><p class="muted">Login সফল হলেও admin_users তালিকায় account না থাকলে প্রবেশ করা যাবে না।</p></section>
+<section id="dashboard" class="hidden"><div class="top"><div><h1 style="margin:0">Admin Dashboard</h1><div id="adminEmail" class="muted"></div></div><button id="reload" class="btn secondary">Refresh</button></div><div class="stats"><div class="stat"><strong id="pendingCount">0</strong>Pending videos</div></div><div id="status" class="status"></div><div id="videos"></div></section>
+</main>
+<script type="module">
+import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
+const supabase=createClient('https://brwjqqqdvyjojqtpsksa.supabase.co','sb_publishable_2AesclnlZMBsAX1FeMg2eg_IyTEq1BY');
+const $=id=>document.getElementById(id);let user=null;
+function message(id,text){$(id).textContent=text}
+function showLogin(){ $('login').classList.remove('hidden');$('dashboard').classList.add('hidden');$('logout').classList.add('hidden');}
+function showDashboard(){ $('login').classList.add('hidden');$('dashboard').classList.remove('hidden');$('logout').classList.remove('hidden');$('adminEmail').textContent=user?.email||'';}
+async function verifyAdmin(candidate){
+ if(!candidate){user=null;showLogin();return false}
+ const {data,error}=await supabase.from('admin_users').select('user_id').eq('user_id',candidate.id).maybeSingle();
+ if(error||!data){await supabase.auth.signOut();user=null;showLogin();message('loginStatus',error?'Admin permission check failed: '+error.message:'এই account-টি Admin হিসেবে অনুমোদিত নয়।');return false}
+ user=candidate;showDashboard();await loadPending();return true;
+}
+async function loadPending(){
+ message('status','Pending video লোড হচ্ছে…');$('videos').replaceChildren();
+ const {data,error}=await supabase.from('videos').select('id,user_id,caption,storage_path,created_at,duration_seconds').eq('status','pending').order('created_at',{ascending:true}).limit(100);
+ if(error){message('status','ভিডিও লোড হয়নি: '+error.message);return}
+ $('pendingCount').textContent=String(data?.length||0);
+ if(!data?.length){$('videos').innerHTML='<div class="empty">এখন কোনো Pending video নেই।</div>';message('status','সব আপডেট হয়েছে।');return}
+ for(const item of data){
+  const {data:signed,error:signError}=await supabase.storage.from('videos').createSignedUrl(item.storage_path,1800);
+  const card=document.createElement('article');card.className='video';
+  if(!signError&&signed?.signedUrl){const v=document.createElement('video');v.src=signed.signedUrl;v.controls=true;v.playsInline=true;card.append(v)}else{const unavailable=document.createElement('div');unavailable.className='empty';unavailable.textContent='ভিডিও Preview পাওয়া যায়নি';card.append(unavailable)}
+  const body=document.createElement('div');const title=document.createElement('h3');title.textContent=item.caption||'Caption নেই';const meta=document.createElement('div');meta.className='meta';meta.textContent='User ID: '+item.user_id+'\nDuration: '+(item.duration_seconds||'—')+' sec\nUploaded: '+new Date(item.created_at).toLocaleString();const actions=document.createElement('div');actions.className='actions';
+  for(const [label,next,klass] of [['Approve','published','success'],['Reject','rejected','danger']]){const b=document.createElement('button');b.className='btn '+klass;b.textContent=label;b.addEventListener('click',async()=>{b.disabled=true;const {error:updateError}=await supabase.from('videos').update({status:next}).eq('id',item.id).eq('status','pending');if(updateError){message('status','Update হয়নি: '+updateError.message);b.disabled=false;return}card.remove();$('pendingCount').textContent=String(Math.max(0,Number($('pendingCount').textContent)-1));message('status','Video '+(next==='published'?'approved':'rejected')+' হয়েছে।');if(!$('videos').children.length)$('videos').innerHTML='<div class="empty">সব Pending video review করা হয়েছে।</div>';});actions.append(b)}
+  body.append(title,meta,actions);card.append(body);$('videos').append(card);
+ }
+ message('status','Review করার জন্য '+data.length+'টি ভিডিও পাওয়া গেছে।');
+}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=e.submitter;b.disabled=true;message('loginStatus','Login হচ্ছে…');try{const {data,error}=await supabase.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;await verifyAdmin(data.user)}catch(err){message('loginStatus',err.message||'Login করা যায়নি।')}finally{b.disabled=false}});
+$('google').addEventListener('click',async()=>{message('loginStatus','Google Login চালু হচ্ছে…');const {error}=await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)message('loginStatus',error.message)});
+$('logout').addEventListener('click',async()=>{await supabase.auth.signOut();user=null;showLogin();message('loginStatus','Logout হয়েছে।')});
+$('reload').addEventListener('click',loadPending);
+supabase.auth.onAuthStateChange((_event,session)=>{if(session?.user)verifyAdmin(session.user);else{user=null;showLogin()}});
+const {data:{session}}=await supabase.auth.getSession();if(session?.user)await verifyAdmin(session.user);
+</script></body></html>
